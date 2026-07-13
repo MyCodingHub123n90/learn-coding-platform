@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Coding | Katony Technologies</title>
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ==================== LANDING PAGE ==================== -->
+    <section id="landingPage">
+      <div class="container">
+        <div class="lc-icon-wrapper">
+          <div class="lc-icon">
+            <span class="letter-l">L</span>
+            <span class="letter-c">C</span>
+          </div>
+        </div>
+        <h1 class="main-title">
+          We are <span class="highlight">Katony Technologies</span>
+        </h1>
+        <p class="sub-title">Learn coding today and become an expert</p>
+        <button id="openRegisterBtn" class="register-btn">
+          <i class="fas fa-user-plus"></i> Register Now
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== REGISTRATION MODAL ==================== -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h2>Create Your Account</h2>
+        <div id="step1">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+          <button id="sendCodeBtn" class="btn-primary">
+            Send 4-Digit Code
+          </button>
+        </div>
+        <div id="step2" style="display: none">
+          <p class="info-text">
+            We sent a 4-digit code to your email. Enter it below:
+          </p>
+          <div class="form-group">
+            <label><i class="fas fa-shield-alt"></i> Verification Code</label>
+            <input
+              type="text"
+              id="verificationCode"
+              placeholder="Enter 4-digit code"
+              maxlength="4"
+            />
+          </div>
+          <button id="verifyBtn" class="btn-primary">
+            Verify &amp; Register
+          </button>
+          <button id="resendCodeBtn" class="btn-secondary">Resend Code</button>
+        </div>
+        <div id="statusMessage" class="status-message"></div>
+      </div>
+    </div>
+
+    <!-- ==================== SHOP SECTION ==================== -->
+    <section id="shopSection" style="display: none">
+      <div class="shop-container">
+        <h2><i class="fas fa-store"></i> Iwotago Investment Limited</h2>
+        <p class="shop-sub">Your trusted partner for quality products</p>
+        <div class="product-grid">
+          <div class="product-card">
+            <i class="fas fa-laptop fa-3x"></i>
+            <h3>Laptops</h3>
+            <p>High-performance laptops for coding &amp; business.</p>
+            <span class="price">$499+</span>
+            <button class="shop-btn">Contact Us</button>
+          </div>
+          <div class="product-card">
+            <i class="fas fa-book fa-3x"></i>
+            <h3>Tech Books</h3>
+            <p>Programming, AI &amp; cybersecurity e-books.</p>
+            <span class="price">$19.99</span>
+            <button class="shop-btn">Contact Us</button>
+          </div>
+          <div class="product-card">
+            <i class="fas fa-headset fa-3x"></i>
+            <h3>IT Support</h3>
+            <p>Consulting, setup, and maintenance services.</p>
+            <span class="price">Custom</span>
+            <button class="shop-btn">Contact Us</button>
+          </div>
+        </div>
+        <button id="goToDashboardBtn" class="dashboard-nav-btn">
+          <i class="fas fa-chart-pie"></i> Go to My Dashboard
+        </button>
+        <p class="shop-footer">
+          &copy; 2026 Iwotago Investment Limited — Built with ❤️ by Katony
+          Technologies
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <section id="dashboardSection" style="display: none">
+      <div class="dashboard-container">
+        <div class="dashboard-header">
+          <div class="logo-area">
+            <span class="dashboard-logo">LC</span>
+            <h1>My Dashboard</h1>
+          </div>
+          <div class="header-actions">
+            <button id="backToShopBtn" class="header-btn">
+              <i class="fas fa-store"></i> Shop
+            </button>
+            <button id="logoutBtn" class="header-btn logout">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-avatar">
+            <i class="fas fa-user-circle fa-5x"></i>
+          </div>
+          <div class="profile-info">
+            <h2 id="dashboardUserName">John Doe</h2>
+            <p>
+              <i class="fas fa-envelope"></i>
+              <span id="dashboardUserEmail">john@email.com</span>
+            </p>
+            <p>
+              <i class="fas fa-calendar-alt"></i> Member since:
+              <span id="dashboardJoinDate">January 2026</span>
+            </p>
+            <span class="status-badge active">Active</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="fas fa-code"></i>
+            <div>
+              <h3 id="totalCourses">0</h3>
+              <p>Courses Enrolled</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-trophy"></i>
+            <div>
+              <h3 id="completedCourses">0</h3>
+              <p>Completed</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-clock"></i>
+            <div>
+              <h3 id="progressPercent">0%</h3>
+              <p>Overall Progress</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-certificate"></i>
+            <div>
+              <h3 id="certificatesCount">0</h3>
+              <p>Certificates</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="classes-section">
+          <h2>
+            <i class="fas fa-graduation-cap"></i> Available Coding Classes
+          </h2>
+          <p class="classes-sub">Choose a class and start learning today!</p>
+          <div class="classes-grid" id="classesGrid">
+            <!-- Classes will be rendered by JavaScript -->
+          </div>
+        </div>
+
+        <div class="dashboard-footer">
+          <p>
+            &copy; 2026 Katony Technologies — Empowering the next generation of
+            coders
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== COURSE PAGE ==================== -->
+    <section id="coursePage" style="display: none">
+      <div class="course-container">
+        <div class="course-header">
+          <button id="backToDashboardBtn" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </button>
+          <h1 id="courseTitle">Course Name</h1>
+          <div class="course-progress">
+            <span id="courseProgressText">0% Complete</span>
+            <div class="progress-bar">
+              <div id="courseProgressBar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-content">
+          <div class="course-sidebar">
+            <h3><i class="fas fa-list"></i> Lessons</h3>
+            <ul id="lessonList" class="lesson-list">
+              <!-- Lessons rendered by JavaScript -->
+            </ul>
+          </div>
+          <div class="course-main">
+            <div id="lessonContent">
+              <h2 id="lessonTitle">Select a lesson to begin</h2>
+              <div id="lessonBody">
+                <p>Click on any lesson from the sidebar to start learning!</p>
+              </div>
+              <div class="lesson-actions">
+                <button
+                  id="markCompleteBtn"
+                  class="btn-primary"
+                  style="display: none"
+                >
+                  <i class="fas fa-check"></i> Mark as Complete
+                </button>
+                <button
+                  id="nextLessonBtn"
+                  class="btn-secondary"
+                  style="display: none"
+                >
+                  Next Lesson <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CLASS ENROLLMENT MODAL ==================== -->
+    <div id="classModal" class="modal">
+      <div class="modal-content class-modal-content">
+        <span class="close-btn" id="closeClassModalBtn">&times;</span>
+        <h2 id="classModalTitle">Enroll in Python Programming</h2>
+        <p id="classModalDesc">You are about to enroll in this course.</p>
+        <div class="class-modal-info">
+          <p>
+            <i class="fas fa-clock"></i> Duration:
+            <span id="classModalDuration">40 hours</span>
+          </p>
+          <p>
+            <i class="fas fa-signal"></i> Level:
+            <span id="classModalLevel">Beginner</span>
+          </p>
+          <p>
+            <i class="fas fa-book"></i> Lessons:
+            <span id="classModalLessons">10</span>
+          </p>
+        </div>
+        <button id="confirmEnrollBtn" class="btn-primary">
+          ✅ Confirm Enrollment
+        </button>
+        <button id="cancelEnrollBtn" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ==================== QUIZ MODAL ==================== -->
+    <div id="quizModal" class="modal">
+      <div class="modal-content quiz-modal-content">
+        <span class="close-btn" id="closeQuizBtn">&times;</span>
+        <h2 id="quizTitle">Quiz</h2>
+        <div id="quizBody">
+          <!-- Quiz rendered by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
