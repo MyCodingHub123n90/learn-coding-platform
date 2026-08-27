@@ -279,7 +279,7 @@ var city = "New York";</code></pre>
 const EMAILJS_CONFIG = {
     publicKey: 'OqpC_vGRZEHfyS0Cc', // Replace with your Public Key
     serviceID: 'service_gmw2wwn', // Replace with your Service ID
-    templateID: template_4aoxl5p' // Replace with your Template ID
+    templateID: 'template_4aoxl5p' // Replace with your Template ID
 };
 
 // Initialize EmailJS with your public key
