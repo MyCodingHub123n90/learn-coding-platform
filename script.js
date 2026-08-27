@@ -272,7 +272,21 @@ var city = "New York";</code></pre>
 };
 
 // ==========================================
-// 2. DOM ELEMENTS
+// 2. EMAILJS CONFIGURATION
+// ==========================================
+// IMPORTANT: Replace these with your actual EmailJS credentials
+// Get them from: https://dashboard.emailjs.com/
+const EMAILJS_CONFIG = {
+    publicKey: 'OqpC_vGRZEHfyS0Cc', // Replace with your Public Key
+    serviceID: 'service_gmw2wwn', // Replace with your Service ID
+    templateID: template_4aoxl5p' // Replace with your Template ID
+};
+
+// Initialize EmailJS with your public key
+emailjs.init(EMAILJS_CONFIG.publicKey);
+
+// ==========================================
+// 3. DOM ELEMENTS
 // ==========================================
 const landingPage = document.getElementById('landingPage');
 const shopSection = document.getElementById('shopSection');
@@ -327,7 +341,7 @@ let selectedClass = '';
 let currentVideoPlayer = null;
 
 // ==========================================
-// 3. MODAL CONTROLS
+// 4. MODAL CONTROLS
 // ==========================================
 openRegisterBtn.addEventListener('click', function() {
     registerModal.style.display = 'flex';
@@ -353,14 +367,14 @@ window.addEventListener('click', function(e) {
 });
 
 // ==========================================
-// 4. GENERATE CODE
+// 5. GENERATE CODE
 // ==========================================
 function generateCode() {
     return Math.floor(1000 + Math.random() * 9000).toString();
 }
 
 // ==========================================
-// 5. SEND CODE - CONSOLE VERSION (NO EMAIL!)
+// 6. SEND CODE VIA EMAILJS
 // ==========================================
 sendCodeBtn.addEventListener('click', async function() {
     const name = fullName.value.trim();
@@ -380,44 +394,99 @@ sendCodeBtn.addEventListener('click', async function() {
         return;
     }
 
-    generatedCode = generateCode();
-    userData = { name, mail, pass };
+    try {
+        // Show loading state
+        sendCodeBtn.disabled = true;
+        sendCodeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        showStatus('⏳ Sending verification code to your email...', 'info');
 
-    // 🔽 SHOW CODE IN CONSOLE 🔽
-    console.log('🔐 YOUR 4-DIGIT VERIFICATION CODE:');
-    console.log('📧 Email:', mail);
-    console.log('🔑 Code:', generatedCode);
-    console.log('📋 Copy this code and paste it below!');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    
-    showStatus('📋 Check the console (F12) for your code!', 'success');
+        generatedCode = generateCode();
+        userData = { name, mail, pass };
 
-    step1.style.display = 'none';
-    step2.style.display = 'block';
+        // Prepare email template parameters
+        const templateParams = {
+            to_email: mail,
+            user_name: name,
+            verification_code: generatedCode,
+            current_year: new Date().getFullYear(),
+            platform_name: 'Katony Technologies'
+        };
+
+        // Send email using EmailJS
+        const response = await emailjs.send(
+            EMAILJS_CONFIG.serviceID,
+            EMAILJS_CONFIG.templateID,
+            templateParams
+        );
+
+        console.log('✅ Email sent successfully!', response);
+
+        showStatus('✅ Verification code sent to your email! Please check your inbox.', 'success');
+
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+
+    } catch (error) {
+        console.error('❌ Email sending failed:', error);
+        showStatus('❌ Failed to send verification code. Please try again.', 'error');
+        
+        // Fallback: Show code in console if email fails
+        console.log('🔐 YOUR VERIFICATION CODE (Fallback):', generatedCode);
+        console.log('📧 Email:', userData.mail);
+        console.log('🔑 Code:', generatedCode);
+    } finally {
+        sendCodeBtn.disabled = false;
+        sendCodeBtn.innerHTML = '<i class="fas fa-envelope"></i> Send Code';
+    }
 });
 
 // ==========================================
-// 6. RESEND CODE - CONSOLE VERSION
+// 7. RESEND CODE VIA EMAILJS
 // ==========================================
 resendCodeBtn.addEventListener('click', async function() {
     if (!userData.mail) {
         showStatus('Please go back and enter your details first.', 'error');
         return;
     }
-    generatedCode = generateCode();
-    
-    // 🔽 SHOW NEW CODE IN CONSOLE 🔽
-    console.log('🔄 NEW CODE GENERATED:');
-    console.log('📧 Email:', userData.mail);
-    console.log('🔑 New Code:', generatedCode);
-    console.log('📋 Copy this code and paste it below!');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    
-    showStatus('📋 Check the console (F12) for your new code!', 'success');
+
+    try {
+        resendCodeBtn.disabled = true;
+        resendCodeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resending...';
+        showStatus('⏳ Resending verification code...', 'info');
+
+        generatedCode = generateCode();
+
+        const templateParams = {
+            to_email: userData.mail,
+            user_name: userData.name,
+            verification_code: generatedCode,
+            current_year: new Date().getFullYear(),
+            platform_name: 'Katony Technologies'
+        };
+
+        await emailjs.send(
+            EMAILJS_CONFIG.serviceID,
+            EMAILJS_CONFIG.templateID,
+            templateParams
+        );
+
+        showStatus('✅ New verification code sent to your email!', 'success');
+
+    } catch (error) {
+        console.error('❌ Resend failed:', error);
+        showStatus('❌ Failed to resend code. Please try again.', 'error');
+        
+        console.log('🔄 NEW CODE (Fallback):', generatedCode);
+        console.log('📧 Email:', userData.mail);
+        console.log('🔑 Code:', generatedCode);
+    } finally {
+        resendCodeBtn.disabled = false;
+        resendCodeBtn.innerHTML = '<i class="fas fa-sync"></i> Resend Code';
+    }
 });
 
 // ==========================================
-// 7. VERIFY CODE
+// 8. VERIFY CODE
 // ==========================================
 verifyBtn.addEventListener('click', function() {
     const entered = verificationCode.value.trim();
@@ -449,7 +518,7 @@ verifyBtn.addEventListener('click', function() {
 });
 
 // ==========================================
-// 8. DASHBOARD FUNCTIONS
+// 9. DASHBOARD FUNCTIONS
 // ==========================================
 function initializeDashboard(user) {
     dashboardUserName.textContent = user.name;
@@ -531,7 +600,7 @@ function renderClasses() {
 }
 
 // ==========================================
-// 9. ENROLLMENT
+// 10. ENROLLMENT
 // ==========================================
 function openEnrollmentModal(courseKey) {
     const course = courseData[courseKey];
@@ -571,7 +640,7 @@ window.addEventListener('click', function(e) {
 });
 
 // ==========================================
-// 10. VIDEO PLAYER
+// 11. VIDEO PLAYER
 // ==========================================
 function createVideoPlayer(videoUrl, lessonId) {
     if (!videoUrl) return '';
@@ -606,7 +675,7 @@ function createVideoPlayer(videoUrl, lessonId) {
 }
 
 // ==========================================
-// 11. COURSE PAGE
+// 12. COURSE PAGE
 // ==========================================
 function openCourse(courseKey) {
     currentCourse = courseKey;
@@ -759,7 +828,7 @@ document.getElementById('backToDashboardBtn').addEventListener('click', function
 });
 
 // ==========================================
-// 12. NAVIGATION
+// 13. NAVIGATION
 // ==========================================
 document.getElementById('goToDashboardBtn').addEventListener('click', function() {
     shopSection.style.display = 'none';
@@ -785,7 +854,7 @@ document.getElementById('logoutBtn').addEventListener('click', function() {
 });
 
 // ==========================================
-// 13. HELPERS
+// 14. HELPERS
 // ==========================================
 function showStatus(msg, type) {
     statusMessage.textContent = msg;
@@ -816,7 +885,7 @@ function showStatusMessage(msg, type) {
 }
 
 // ==========================================
-// 14. QUIZ MODAL
+// 15. QUIZ MODAL
 // ==========================================
 closeQuizBtn.addEventListener('click', function() {
     quizModal.style.display = 'none';
@@ -829,4 +898,4 @@ window.addEventListener('click', function(e) {
 });
 
 console.log('🎬 Video-Enhanced Learning Platform Loaded!');
-console.log('📋 Registration codes will appear here in the console!');
+console.log('📧 EmailJS integration enabled for verification codes!');
