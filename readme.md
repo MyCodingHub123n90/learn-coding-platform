@@ -16,10 +16,6 @@ A complete website for learning coding with registration + Iwotago Investment Li
 4. A 4-digit code is sent (check console or real email if EmailJS configured).
 5. Enter the code to verify and unlock the shop.
 
-## EmailJS Setup (Optional)
 
-To send real emails:
 
-1. Sign up at [EmailJS](https://www.emailjs.com/)
-2. Create a service and template
-3. Replace `YOUR_PUBLIC_KEY`, `YOUR_SERVICE_ID`, `YOUR_TEMPLATE_ID` in `script.js`
+
